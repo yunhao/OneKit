@@ -1,0 +1,25 @@
+### macOS ###
+
+.DS_Store
+
+### Xcode ###
+
+build/
+xcuserdata/
+
+### Swift Package Manager ###
+
+.build/
+Packages/
+.swiftpm
+
+### fastlane ###
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/screenshots/screenshots.html
+fastlane/test_output
+fastlane/README.md
+fastlane/.env
+DRAFT_RELEASE.yml
