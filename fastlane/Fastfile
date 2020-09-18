@@ -1,0 +1,121 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Run all tests"
+  lane :tests do
+    test(destination: "platform=iOS Simulator,name=iPhone 11", swift_version: "5.2")
+  end
+
+  desc "Run all tests within CI"
+  lane :tests_ci do
+    test(destination: ENV["DESTINATION"], swift_version: ENV["SWIFT_VERSION"])
+  end
+
+  lane :test do |options|
+    scan(
+      scheme: "OneKit", 
+      clean: true, 
+      xcargs: "SWIFT_VERSION=#{options[:swift_version]}",
+      destination: options[:destination]
+    )
+  end
+
+  desc "Draft Releases"
+  lane :draft_release do |options|
+    if bump_type = options[:bump_type]
+      make_draft_release(
+        bump_type: bump_type
+      )
+    else
+      make_draft_release
+    end
+  end
+
+  desc "New Release"
+  lane :release do |options|
+    # Get and validate the draft-release file
+    draft = validate_draft_release
+
+    # The new version to release
+    target_version = draft["target"]["version"]
+    # Use the number of commits as the build number
+    build_number = draft["target"]["build"]
+
+    # Continue or cancel
+    confirmed = UI.confirm("Are you sure to release the new version [#{target_version}] with tag [#{draft["target"]["tag"]}] ?")
+    UI.abort_with_message! "The release process is canceled" unless confirmed
+
+    ensure_git_branch(
+      branch: 'master'
+    )
+    ensure_git_status_clean(
+      show_uncommitted_changes: true
+    )
+    
+    # Update build and version number in Info.plist and OneKit.xcodeproj
+    increment_build_number(build_number: build_number)
+    increment_version_number(version_number: target_version)
+    
+    # Update documentation
+    doc(version: target_version)
+
+    # Update CHANGELOG.md from DRAFT_RELEASE.yml file
+    changelog = update_changelog
+    
+    # Commit version bump
+    bump_message = "Bump to v#{target_version}"
+    commit_version_bump(
+      message: bump_message
+    )
+
+    # Create new tag
+    Actions.sh("git tag -s v#{target_version} -m ''")
+    
+    # Push all commits and tag to remote
+    push_to_git_remote
+    
+    set_github_release(
+      repository_name: "yunhao/OneKit",
+      api_token: ENV['GITHUB_TOKEN'],
+      name: changelog[:version],
+      tag_name: changelog[:tag],
+      description: changelog[:release_message]
+    )
+  end
+
+  desc "Generate documentation"
+  lane :doc do |options|
+    target_version = options[:version]
+    UI.user_error! "The version number is missing. You must specify a target version" unless target_version
+
+    UI.success "Update documentaion for #{target_version}"
+
+    Actions.sh("cd .. && jazzy \
+      --clean \
+      -x USE_SWIFT_RESPONSE_FILE=NO \
+      --author \"yunhao\" \
+      --author_url https://github.com/yunhao \
+      --github_url https://github.com/yunhao/OneKit \
+      --github-file-prefix https://github.com/yunhao/OneKit/tree/v#{target_version} \
+      --module-version v#{target_version} \
+      --module OneKit \
+      --root-url http://yunhao.github.io/OneKit/ \
+      --output docs/ \
+      --theme fullwidth")
+  end
+end

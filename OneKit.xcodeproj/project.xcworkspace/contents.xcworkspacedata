@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
-   <Group
-      location = "group:../Sources/OneKit"
-      name = "OneKit">
-      <FileRef
-         location = "group:OneKit.h">
-      </FileRef>
-      <Group
-         location = "group:Extension"
-         name = "Extension">
-         <FileRef
-            location = "group:UIColor+Extensions.swift">
-         </FileRef>
-      </Group>
-      <FileRef
-         location = "group:Info.plist">
-      </FileRef>
-   </Group>
    <FileRef
       location = "self:">
    </FileRef>
