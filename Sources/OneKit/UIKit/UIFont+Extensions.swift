@@ -17,6 +17,13 @@ public extension UIFont {
         guard let descriptor = fontDescriptor.withSymbolicTraits(traits) else { return nil }
         return UIFont(descriptor: descriptor, size: 0)
     }
+    
+    /// Return a new font that is the same as the existing font, but with the rounded design.
+    @available(iOS 13.0, *)
+    func rounded() -> UIFont? {
+        guard let descriptor = fontDescriptor.withDesign(.rounded) else { return nil }
+        return UIFont(descriptor: descriptor, size: 0)
+    }
 
     /// Returns a new font  that is the same as the existing font, but with the bold trait.
     func bold() -> UIFont? {

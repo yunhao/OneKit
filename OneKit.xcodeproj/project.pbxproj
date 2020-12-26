@@ -18,6 +18,10 @@
 		31391F192513B2D40082B372 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31391F182513B2D40082B372 /* Dictionary+Extensions.swift */; };
 		31639B13251438B7002A9E67 /* CGSizeExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31639B12251438B7002A9E67 /* CGSizeExtensionTests.swift */; };
 		31639B19251439B9002A9E67 /* DictionaryExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31639B18251439B9002A9E67 /* DictionaryExtensionsTests.swift */; };
+		318233BE2597B80E00ED4C72 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318233BA2597B80E00ED4C72 /* Dictionary+Extensions.swift */; };
+		318233BF2597B80E00ED4C72 /* DateComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318233BB2597B80E00ED4C72 /* DateComponents.swift */; };
+		318233C02597B80E00ED4C72 /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318233BC2597B80E00ED4C72 /* DateFormatter+Extensions.swift */; };
+		318233C12597B80E00ED4C72 /* RelativeDateTimeFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318233BD2597B80E00ED4C72 /* RelativeDateTimeFormatter+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +49,10 @@
 		31391F182513B2D40082B372 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		31639B12251438B7002A9E67 /* CGSizeExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CGSizeExtensionTests.swift; path = Tests/OneKitTests/FoundationTests/CGSizeExtensionTests.swift; sourceTree = SOURCE_ROOT; };
 		31639B18251439B9002A9E67 /* DictionaryExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtensionsTests.swift; sourceTree = "<group>"; };
+		318233BA2597B80E00ED4C72 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
+		318233BB2597B80E00ED4C72 /* DateComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateComponents.swift; sourceTree = "<group>"; };
+		318233BC2597B80E00ED4C72 /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
+		318233BD2597B80E00ED4C72 /* RelativeDateTimeFormatter+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RelativeDateTimeFormatter+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +150,10 @@
 		31391F0E2513619D0082B372 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				318233BB2597B80E00ED4C72 /* DateComponents.swift */,
+				318233BC2597B80E00ED4C72 /* DateFormatter+Extensions.swift */,
+				318233BA2597B80E00ED4C72 /* Dictionary+Extensions.swift */,
+				318233BD2597B80E00ED4C72 /* RelativeDateTimeFormatter+Extensions.swift */,
 				31391F0F251361B00082B372 /* Date+Extensions.swift */,
 				31391F11251365F70082B372 /* DateComponentsFormatter+Extensions.swift */,
 				31391F182513B2D40082B372 /* Dictionary+Extensions.swift */,
@@ -279,9 +291,13 @@
 				31391F08251305190082B372 /* UIColor+Extensions.swift in Sources */,
 				31391F10251361B00082B372 /* Date+Extensions.swift in Sources */,
 				31391F152513A6160082B372 /* CGSize+Extensions.swift in Sources */,
+				318233BF2597B80E00ED4C72 /* DateComponents.swift in Sources */,
+				318233BE2597B80E00ED4C72 /* Dictionary+Extensions.swift in Sources */,
 				31391F172513A7940082B372 /* UIFont+Extensions.swift in Sources */,
 				31391F12251365F70082B372 /* DateComponentsFormatter+Extensions.swift in Sources */,
+				318233C12597B80E00ED4C72 /* RelativeDateTimeFormatter+Extensions.swift in Sources */,
 				31391F192513B2D40082B372 /* Dictionary+Extensions.swift in Sources */,
+				318233C02597B80E00ED4C72 /* DateFormatter+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
