@@ -11,45 +11,49 @@ import Foundation
 // MARK: - Initializers
 
 public extension Date {
-    /// Create a new date from date components.
+    
+    /// Create a new date, optionally specifying values for its fields.
     ///
-    ///     let date = Date(year: 2018, month: 5, day: 16) // "May 16, 2018, 3:28 PM"
+    ///     let date = Date.fromComponents(year: 2018, month: 5, day: 16) // "May 16, 2018, 3:28 PM"
     ///
-    /// - Parameters:
-    ///   - year: Year.
-    ///   - month: Month.
-    ///   - day: Day.
-    ///   - hour: Hour. The defautl value is 0.
-    ///   - minute: Minute. The defautl value is 0.
-    ///   - second: Second. The defautl value is 0.
-    ///   - nanosecond: Nanosecond. The defautl value is 0.
-    init?(calendar: Calendar? = .current,
-          timeZone: TimeZone? = .current,
-          era: Int? = nil,
-          year: Int? = nil,
-          month: Int? = nil,
-          day: Int? = nil,
-          hour: Int? = nil,
-          minute: Int? = nil,
-          second: Int? = nil,
-          nanosecond: Int? = nil
-    ) {
-        let current = Date()
+    static func fromComponents(
+        calendar: Calendar? = .current,
+        timeZone: TimeZone? = .current,
+        era: Int? = nil,
+        year: Int? = nil,
+        month: Int? = nil,
+        day: Int? = nil,
+        hour: Int? = nil,
+        minute: Int? = nil,
+        second: Int? = nil,
+        nanosecond: Int? = nil,
+        weekday: Int? = nil,
+        weekdayOrdinal: Int? = nil,
+        quarter: Int? = nil,
+        weekOfMonth: Int? = nil,
+        weekOfYear: Int? = nil,
+        yearForWeekOfYear: Int? = nil
+    ) -> Date? {
         let components = DateComponents(
             calendar: calendar,
             timeZone: timeZone,
-            era: era ?? current.era,
-            year: year ?? current.year,
-            month: month ?? current.month,
-            day: day ?? current.day,
-            hour: hour ?? current.hour,
-            minute: minute ?? current.minute,
-            second: second ?? current.second,
-            nanosecond: nanosecond ?? current.nanosecond
+            era: era,
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second,
+            nanosecond: nanosecond,
+            weekday: weekday,
+            weekdayOrdinal: weekdayOrdinal,
+            quarter: quarter,
+            weekOfMonth: weekOfMonth,
+            weekOfYear: weekOfYear,
+            yearForWeekOfYear: yearForWeekOfYear
         )
         
-        guard let date = calendar?.date(from: components) else { return nil }
-        self = date
+        return components.date
     }
 
 }
@@ -118,6 +122,11 @@ public extension Date {
     var nanosecond: Int {
         return calendar.component(.nanosecond, from: self)
     }
+    
+    /// Returns all the date components of a date, using the calendar time zone.
+    func dateComponents(components: Set<Calendar.Component>) -> DateComponents {
+        return calendar.dateComponents(components, from: self)
+    }
 }
 
 // MARK: - Manipulate Date
@@ -138,14 +147,30 @@ public extension Date {
         return calendar.date(byAdding: .day, value: 1, to: self)
     }
     
+    /// Returns the first moment of the current Date, as a Date.
+    var startOfDay: Date {
+        return calendar.startOfDay(for: self)
+    }
+    
     /// Returns a new `Date` representing the date calculated by adding an amount of a specific component to a given date.
     ///
     /// - parameter component: A single component to add.
     /// - parameter value: The value of the specified component to add.
     /// - parameter wrappingComponents: If `true`, the component should be incremented and wrap around to zero/one on overflow, and should not cause higher components to be incremented. The default value is `false`.
     /// - returns: A new date, or nil if a date could not be calculated with the given input.
-    func advanced(byAdding component: Calendar.Component, value: Int, wrappingComponents: Bool = false) -> Date? {
+    func adding(_ component: Calendar.Component, value: Int, wrappingComponents: Bool = false) -> Date? {
         return calendar.date(byAdding: component, value: value, to: self, wrappingComponents: wrappingComponents)
+    }
+    
+    
+    /// Returns a new `Date` representing the date calculated by setting a specific component to a given time, and trying to keep lower components the same.
+    func setting(_ components: Calendar.Component, value: Int) -> Date? {
+        return calendar.date(bySetting: components, value: value, of: self)
+    }
+    
+    /// Returns a new Date representing the date calculated by setting hour, minute, and second to a given time on a specified Date.
+    func setting(hour: Int, minute: Int, second: Int, matchingPolicy: Calendar.MatchingPolicy = .nextTime, repeatedTimePolicy: Calendar.RepeatedTimePolicy = .first, direction: Calendar.SearchDirection = .forward) -> Date? {
+        return calendar.date(bySettingHour: hour, minute: minute, second: second, of: self, matchingPolicy: matchingPolicy, repeatedTimePolicy: repeatedTimePolicy, direction: direction)
     }
 }
 
@@ -222,7 +247,7 @@ public extension Date {
     ///   - formatTemplate: The date format template used by the receiver.  The default value is "dd/MM/yyyy".
     ///   - locale: The locale for the receiver. The default  value is the current locale.
     /// - Returns: A string representation of date formatted using a localized format string.
-    func localizedString(formatTemplate: String = "dd/MM/yyyy", locale: Locale = .current) -> String {
+    func string(formatTemplate: String, locale: Locale = .current) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = locale
         dateFormatter.setLocalizedDateFormatFromTemplate(formatTemplate)
@@ -240,6 +265,16 @@ public extension Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         return dateFormatter.string(from: self)
+    }
+    
+    /// Returns a string representation of the date formatted using the given format options.
+    ///
+    /// - Parameter options: The date format options.
+    /// - Returns: A string representation of date formatted using the given format options.
+    func string(options: [DateFormatter.Option]) -> String {
+        let formatter = DateFormatter()
+        formatter.apply(options: options)
+        return formatter.string(from: self)
     }
 }
  
@@ -269,6 +304,25 @@ public extension Date {
         let formatter = DateComponentsFormatter()
         formatter.apply(options: options)
         return formatter.string(from: start, to: self)
+    }
+}
+
+// MARK: - Relative String
+
+@available(iOS 13.0, *)
+public extension Date {
+    
+    
+    /// Return a user-readable string representation of relaltive date times.
+    ///
+    /// - Parameters:
+    ///   - end: Relative to the end date.
+    ///   - options: Options for formatting.
+    /// - Returns: A string representation.
+    func string(relativeTo end: Date, options: [RelativeDateTimeFormatter.Option] = []) -> String? {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.apply(options: options)
+        return formatter.localizedString(for: self, relativeTo: end)
     }
 }
 
